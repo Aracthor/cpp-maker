@@ -5,11 +5,13 @@
 ## Login   <aracthor@epitech.net>
 ## 
 ## Started on  Mon Jul 27 16:33:13 2015 Aracthor
-## Last Update Mon Jul 27 16:39:25 2015 Aracthor
+## Last Update Mon Jul 27 17:44:28 2015 Aracthor
 ##
 
 CC=		cat
+MKDIR=		mkdir
 RM=		rm -f
+RMDIR=		rmdir
 CHMOD=		chmod
 INSTALL=	install
 
@@ -30,12 +32,20 @@ SRCS=		$(SRCS_FILES:%=$(SRCS_DIR)%)
 
 
 
-$(CPP_MAKER):	$(SRCS)
+$(CPP_MAKER):	$(BIN_DIR) $(SRCS)
 		$(CC) $(SRCS) > $(CPP_MAKER)
 		$(CHMOD) +x $(CPP_MAKER)
 
+all:		$(CPP_MAKER)
+
+$(BIN_DIR):
+		$(MKDIR) $(BIN_DIR)
+
 clean:
 		$(RM) $(CPP_MAKER)
+		$(RMDIR) $(BIN_DIR)
+
+re:		clean all
 
 install:	$(CPP_MAKER)
 		$(INSTALL) -m 0755 $(NAME) $(BIN_DIR)
