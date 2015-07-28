@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:31:58 2015 Aracthor
-## Last Update Tue Jul 28 17:35:04 2015 Aracthor
+## Last Update Tue Jul 28 18:24:02 2015 Aracthor
 ##
 
 CREATE_USAGE="\
@@ -40,9 +40,10 @@ create_header ()
     local data=""
     for include in ${INCLUDES[*]}
     do
+	include=$(read_type $include)
 	namespace=$(get_namespace $include)
 	class=$(get_class $include)
-	if [ $(array_contains NATIVES $include) == $FALSE ] && [ $(array_contains included $include) == $FALSE ]
+	if [ "$include" != "const" ] && [ $(array_contains NATIVES $include) == $FALSE ] && [ $(array_contains included $include) == $FALSE ]
 	then
 	    included+=($include)
 	    if [ "$namespace" == "std" ]
@@ -95,7 +96,7 @@ create_header ()
     data=$data"$line\n"
 
     # Members
-    if [ ${#MEMBERS[@]} > 0 ]
+    if (( ${#MEMBERS_TYPES[@]} > 0 ))
     then
 	if [ $ABSTRACT == $TRUE ]
 	then

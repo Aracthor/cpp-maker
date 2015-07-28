@@ -4,8 +4,10 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 15:37:35 2015 Aracthor
-## Last Update Tue Jul 28 14:31:16 2015 Aracthor
+## Last Update Tue Jul 28 18:22:45 2015 Aracthor
 ##
+
+set -f
 
 if [ $# -le 0 ]
 then

@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Tue Jul 28 14:44:41 2015 Aracthor
-## Last Update Tue Jul 28 15:02:36 2015 Aracthor
+## Last Update Tue Jul 28 18:21:58 2015 Aracthor
 ##
 
 there_is_a_namespace ()
@@ -37,4 +37,9 @@ get_class ()
     fi
 
     echo $cutted
+}
+
+read_type ()
+{
+    echo $1 | tr -d "\*\&"
 }
