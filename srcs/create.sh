@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:31:58 2015 Aracthor
-## Last Update Tue Jul 28 15:34:40 2015 Aracthor
+## Last Update Tue Jul 28 17:35:04 2015 Aracthor
 ##
 
 CREATE_USAGE="\
@@ -14,6 +14,11 @@ USAGE:\n\
 "
 
 INCLUDES=()
+MEMBERS_TYPES=()
+MEMBERS_NAMES=()
+METHODS=()
+NATIVES=("char" "int" "long" "float" "double")
+
 CLASS_NAME=""
 CLASS=$TRUE
 ABSTRACT=$TRUE
@@ -31,21 +36,26 @@ create_header ()
     list_includes
 
     # Includes
+    local included=()
     local data=""
-    for include in ${INCLUDES[*]};
+    for include in ${INCLUDES[*]}
     do
 	namespace=$(get_namespace $include)
 	class=$(get_class $include)
-	if [ "$namespace" == "std" ]
+	if [ $(array_contains NATIVES $include) == $FALSE ] && [ $(array_contains included $include) == $FALSE ]
 	then
-	    include="<$class>"
-	elif [ "$namespace" != "" ]
-	then
-	    include="\"$namespace/$class.hh\""
-	else
-	    include="\"$class.hh\""
+	    included+=($include)
+	    if [ "$namespace" == "std" ]
+	    then
+		include="<$class>"
+	    elif [ "$namespace" != "" ]
+	    then
+		include="\"$namespace/$class.hh\""
+	    else
+		include="\"$class.hh\""
+	    fi
+	    data=$data"#include $include\n"
 	fi
-	data=$data"#include $include\n"
     done
 
     # Class name
@@ -61,16 +71,16 @@ create_header ()
     then
 	if [ $DEFAULT_CONSTRUCTOR == $TRUE ]
 	then
-	    data=$data"  $CLASS_NAME();\n"
+	    data=$data"    $CLASS_NAME();\n"
 	fi
 	if [ $COPY_CONSTRUCTOR == $TRUE ]
 	then
-	    data=$data"  $CLASS_NAME(const $CLASS_NAME& ref);\n"
+	    data=$data"    $CLASS_NAME(const $CLASS_NAME& ref);\n"
 	fi
     fi
 
     # Detructor
-    line="  "
+    line="    "
     if [ $CLASS == $FALSE ] || [ $ABSTRACT == $TRUE ]
     then
 	line=$line"virtual "
@@ -83,6 +93,24 @@ create_header ()
 	line=$line" {}"
     fi
     data=$data"$line\n"
+
+    # Members
+    if [ ${#MEMBERS[@]} > 0 ]
+    then
+	if [ $ABSTRACT == $TRUE ]
+	then
+	    data=$data"\nprotected:\n"
+	else
+	    data=$data"\nprivate:\n"
+	fi
+
+	for (( i=0; i < ${#MEMBERS_TYPES[@]}; ++i ))
+	do
+	    type=${MEMBERS_TYPES[$i]}
+	    name=${MEMBERS_NAMES[$i]}
+	    data=$data"    $type\tm_$name;\n"
+	done
+    fi
 
     # Closure
     data=$data"};"
@@ -128,6 +156,20 @@ create ()
 	then
 	    DEFAULT_CONSTRUCTOR=$(read_boolean "Default constructor ?" 'y' 'n')
 	    COPY_CONSTRUCTOR=$(read_boolean "Copy constructor ?" 'y' 'n')
+
+	    echo "Members: " >&2
+	    while true
+	    do
+		type=$(read_string "Type: ")
+		if [ "$type" == "" ]
+		then
+		    break
+		fi
+		name=$(read_string "Name: ")
+		MEMBERS_TYPES+=("$type")
+		MEMBERS_NAMES+=("$name")
+		INCLUDES+=("$type")
+	    done
 	fi
 
 	create_header $header_file
