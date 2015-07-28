@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:33:13 2015 Aracthor
-## Last Update Tue Jul 28 14:31:06 2015 Aracthor
+## Last Update Tue Jul 28 14:51:34 2015 Aracthor
 ##
 
 CC=		cat
@@ -29,6 +29,7 @@ SRCS_FILES=	booleans.sh	\
 		create.sh	\
 		help.sh		\
 		reads.sh	\
+		strings.sh	\
 		cpp-maker.sh
 SRCS=		$(SRCS_FILES:%=$(SRCS_DIR)%)
 

@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:31:58 2015 Aracthor
-## Last Update Tue Jul 28 14:34:13 2015 Aracthor
+## Last Update Tue Jul 28 15:34:40 2015 Aracthor
 ##
 
 CREATE_USAGE="\
@@ -18,8 +18,8 @@ CLASS_NAME=""
 CLASS=$TRUE
 ABSTRACT=$TRUE
 MOTHER=""
-
-STL=("deque", "list", "map", "queue", "stack", "vector")
+DEFAULT_CONSTRUCTOR=$TRUE
+COPY_CONSTRUCTOR=$TRUE
 
 list_includes ()
 {
@@ -30,26 +30,64 @@ create_header ()
 {
     list_includes
 
+    # Includes
     local data=""
     for include in ${INCLUDES[*]};
     do
-	stl_include=$(array_contains STL $include)
-	if [ $stl_include == $TRUE ]
+	namespace=$(get_namespace $include)
+	class=$(get_class $include)
+	if [ "$namespace" == "std" ]
 	then
-	    include="<$include>"
+	    include="<$class>"
+	elif [ "$namespace" != "" ]
+	then
+	    include="\"$namespace/$class.hh\""
 	else
-	    include="\"$include.hh\""
+	    include="\"$class.hh\""
 	fi
 	data=$data"#include $include\n"
     done
 
-    data=$data"\nclass\t$2"
-    if [ "$mother" != "" ]
+    # Class name
+    data=$data"\nclass\t$CLASS_NAME"
+    if [ "$MOTHER" != "" ]
     then
-	data=$data" : public $mother"
+	data=$data" : public $MOTHER"
+    fi
+    data=$data"\n{\npublic:\n"
+
+    # Constructors
+    if [ $CLASS == $TRUE ]
+    then
+	if [ $DEFAULT_CONSTRUCTOR == $TRUE ]
+	then
+	    data=$data"  $CLASS_NAME();\n"
+	fi
+	if [ $COPY_CONSTRUCTOR == $TRUE ]
+	then
+	    data=$data"  $CLASS_NAME(const $CLASS_NAME& ref);\n"
+	fi
     fi
 
-    echo -e $data > $1
+    # Detructor
+    line="  "
+    if [ $CLASS == $FALSE ] || [ $ABSTRACT == $TRUE ]
+    then
+	line=$line"virtual "
+    fi
+    line=$line"~$CLASS_NAME()"
+    if [ $CLASS == $TRUE ]
+    then
+	line=$line";"
+    else
+	line=$line" {}"
+    fi
+    data=$data"$line\n"
+
+    # Closure
+    data=$data"};"
+
+    echo -e "$data" > $1
 }
 
 create ()
@@ -85,6 +123,12 @@ create ()
 	    ABSTRACT=$(read_boolean "Inheritable ?" 'y' 'n')
 	fi
 	MOTHER=$(read_string "Inherit from: ")
+
+	if [ $CLASS == $TRUE ]
+	then
+	    DEFAULT_CONSTRUCTOR=$(read_boolean "Default constructor ?" 'y' 'n')
+	    COPY_CONSTRUCTOR=$(read_boolean "Copy constructor ?" 'y' 'n')
+	fi
 
 	create_header $header_file
     fi
