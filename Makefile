@@ -2,10 +2,9 @@
 ## Makefile for cpp-maker in /home/aracthor/programs/projects/cpp-maker
 ## 
 ## Made by Aracthor
-## Login   <aracthor@epitech.net>
 ## 
 ## Started on  Mon Jul 27 16:33:13 2015 Aracthor
-## Last Update Mon Jul 27 17:44:28 2015 Aracthor
+## Last Update Tue Jul 28 14:31:06 2015 Aracthor
 ##
 
 CC=		cat
@@ -25,8 +24,11 @@ NAME=		cpp-maker
 CPP_MAKER=	$(BIN_DIR)$(NAME)
 
 SRCS_DIR=	srcs/
-SRCS_FILES=	create.sh	\
+SRCS_FILES=	booleans.sh	\
+		arrays.sh	\
+		create.sh	\
 		help.sh		\
+		reads.sh	\
 		cpp-maker.sh
 SRCS=		$(SRCS_FILES:%=$(SRCS_DIR)%)
 

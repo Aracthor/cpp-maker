@@ -2,10 +2,9 @@
 ## help.sh for cpp-maker in /home/aracthor/programs/projects/cpp-maker
 ## 
 ## Made by Aracthor
-## Login   <aracthor@epitech.net>
 ## 
 ## Started on  Mon Jul 27 16:24:18 2015 Aracthor
-## Last Update Mon Jul 27 17:16:24 2015 Aracthor
+## Last Update Tue Jul 28 14:31:10 2015 Aracthor
 ##
 
 COMMANDS=(
@@ -18,7 +17,7 @@ DESCRIPTIONS=(
     "Print this help message and exit."
 )
 
-function print_usage
+print_usage ()
 {
     message="USAGE: $0 <command> [<args>]\n"
     message="$message\nCommands are:"
@@ -32,7 +31,7 @@ function print_usage
     echo -e "$message" >&2
 }
 
-function help
+help ()
 {
     print_usage
     return 0
