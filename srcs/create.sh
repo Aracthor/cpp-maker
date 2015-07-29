@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:31:58 2015 Aracthor
-## Last Update Tue Jul 28 18:24:02 2015 Aracthor
+## Last Update Wed Jul 29 14:22:56 2015 Aracthor
 ##
 
 CREATE_USAGE="\
@@ -19,6 +19,7 @@ MEMBERS_NAMES=()
 METHODS=()
 NATIVES=("char" "int" "long" "float" "double")
 
+MACCRO=""
 CLASS_NAME=""
 CLASS=$TRUE
 ABSTRACT=$TRUE
@@ -33,11 +34,16 @@ list_includes ()
 
 create_header ()
 {
-    list_includes
+
+    local data=""
+
+    # Double-inclusion protection
+    data=$data"#ifndef $MACCRO\n"
+    data=$data"# define $MACCRO\n"
 
     # Includes
+    list_includes
     local included=()
-    local data=""
     for include in ${INCLUDES[*]}
     do
 	include=$(read_type $include)
@@ -55,7 +61,7 @@ create_header ()
 	    else
 		include="\"$class.hh\""
 	    fi
-	    data=$data"#include $include\n"
+	    data=$data"# include $include\n"
 	fi
     done
 
@@ -114,7 +120,8 @@ create_header ()
     fi
 
     # Closure
-    data=$data"};"
+    data=$data"};\n\n"
+    data=$data"#endif // !$MACCRO"
 
     echo -e "$data" > $1
 }
@@ -145,6 +152,7 @@ create ()
 	source_file="$source_dir$CLASS_NAME.cpp"
 	header_file="$include_dir$CLASS_NAME.hh"
 	template_file="$include_dir$CLASS_NAME.hpp"
+	MACCRO=$(get_maccro_name $CLASS_NAME)
 
 	CLASS=$(read_boolean "Class or Interface ?" 'c' 'i')
 	if [ $CLASS == $TRUE ]

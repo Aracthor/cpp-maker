@@ -4,8 +4,23 @@
 ## Made by Aracthor
 ## 
 ## Started on  Tue Jul 28 14:44:41 2015 Aracthor
-## Last Update Tue Jul 28 18:21:58 2015 Aracthor
+## Last Update Wed Jul 29 14:31:08 2015 Aracthor
 ##
+
+get_maccro_name ()
+{
+    name=$1
+
+    if [ $(there_is_a_namespace $name) == $TRUE ]
+    then
+	namespace=$(get_class $name)
+	class=$(get_class $name)
+	name=$namespace"_"$class
+    fi
+
+    maccro=$(echo $name | sed 's/[A-Z]/_&/g' | tr '[:lower:]' '[:upper:]')"_HH_"
+    echo $maccro | tail -c ${#maccro}
+}
 
 there_is_a_namespace ()
 {
