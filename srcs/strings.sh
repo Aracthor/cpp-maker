@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Tue Jul 28 14:44:41 2015 Aracthor
-## Last Update Wed Jul 29 14:31:08 2015 Aracthor
+## Last Update Wed Jul 29 16:13:18 2015 Aracthor
 ##
 
 get_maccro_name ()
@@ -52,6 +52,17 @@ get_class ()
     fi
 
     echo $cutted
+}
+
+type_is_const ()
+{
+    type=$1
+    if [ ${type:0:5} == "const" ]
+    then
+	echo $TRUE
+    else
+	echo $FALSE
+    fi
 }
 
 read_type ()

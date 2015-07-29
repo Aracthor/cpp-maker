@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:31:58 2015 Aracthor
-## Last Update Wed Jul 29 14:22:56 2015 Aracthor
+## Last Update Wed Jul 29 16:25:19 2015 Aracthor
 ##
 
 CREATE_USAGE="\
@@ -13,11 +13,14 @@ USAGE:\n\
   $0 $1 <object name> <include folder> <srcs folder>\
 "
 
-INCLUDES=()
 MEMBERS_TYPES=()
 MEMBERS_NAMES=()
+MEMBERS_GETTERS=()
+
+INCLUDES=()
 METHODS=()
-NATIVES=("char" "int" "long" "float" "double")
+NATIVES=("char" "short" "int" "long" "float" "double")
+GETTERS=()
 
 MACCRO=""
 CLASS_NAME=""
@@ -30,20 +33,9 @@ COPY_CONSTRUCTOR=$TRUE
 list_includes ()
 {
     INCLUDES+=($MOTHER)
-}
-
-create_header ()
-{
-
-    local data=""
-
-    # Double-inclusion protection
-    data=$data"#ifndef $MACCRO\n"
-    data=$data"# define $MACCRO\n"
-
-    # Includes
-    list_includes
+    local new_includes=()
     local included=()
+
     for include in ${INCLUDES[*]}
     do
 	include=$(read_type $include)
@@ -61,8 +53,55 @@ create_header ()
 	    else
 		include="\"$class.hh\""
 	    fi
-	    data=$data"# include $include\n"
+	    new_includes+=($include)
 	fi
+    done
+
+    INCLUDES=()
+    for include in ${new_includes[*]}
+    do
+	INCLUDES+=($include)
+    done
+}
+
+list_getters ()
+{
+    for (( i=0; i < ${#MEMBERS_TYPES[@]}; ++i ))
+    do
+	getter=${MEMBERS_GETTERS[$i]}
+	if [ $getter == $TRUE ]
+	then
+	    name=${MEMBERS_NAMES[$i]}
+	    type=${MEMBERS_TYPES[$i]}
+	    if [ $(type_is_const $type) == $FALSE ] && [ $(array_contains NATIVES $type) == $FALSE ]
+	    then
+		type="const "$type
+	    fi
+	    name="get""${name^}"
+	    prototype=$(echo "inline ""$type $name""() const;" | sed "s/ /_/g")
+	    GETTERS+=($prototype)
+	fi
+    done
+}
+
+create_header ()
+{
+
+    local data=""
+
+    # Double-inclusion protection
+    data=$data"#ifndef $MACCRO\n"
+    data=$data"# define $MACCRO\n"
+
+    # Includes
+    list_includes
+    if (( ${#INCLUDES[@]} > 0 ))
+    then
+	data=$data"\n"
+    fi
+    for include in ${INCLUDES[@]}
+    do
+	data=$data"# include $include\n"
     done
 
     # Class name
@@ -100,6 +139,18 @@ create_header ()
 	line=$line" {}"
     fi
     data=$data"$line\n"
+
+    # Getters
+    list_getters
+    if (( ${#GETTERS[@]} > 0 ))
+    then
+	data=$data"\npublic:\n"
+	for getter in ${GETTERS[*]}
+	do
+	    getter=$(echo "   " $getter | sed "s/_/ /g")
+	    data=$data$getter"\n"
+	done
+    fi
 
     # Members
     if (( ${#MEMBERS_TYPES[@]} > 0 ))
@@ -164,7 +215,8 @@ create ()
 	if [ $CLASS == $TRUE ]
 	then
 	    DEFAULT_CONSTRUCTOR=$(read_boolean "Default constructor ?" 'y' 'n')
-	    COPY_CONSTRUCTOR=$(read_boolean "Copy constructor ?" 'y' 'n')
+	    COPY_CONSTRUCTOR=$(read_boolean "Copy constructor ?" 'n' 'y')
+	    COPY_CONSTRUCTOR=$(opposite $COPY_CONSTRUCTOR)
 
 	    echo "Members: " >&2
 	    while true
@@ -175,8 +227,11 @@ create ()
 		    break
 		fi
 		name=$(read_string "Name: ")
+		getter=$(read_boolean "Getter ?", 'y', 'n')
+
 		MEMBERS_TYPES+=("$type")
 		MEMBERS_NAMES+=("$name")
+		MEMBERS_GETTERS+=("$getter")
 		INCLUDES+=("$type")
 	    done
 	fi
