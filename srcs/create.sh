@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:31:58 2015 Aracthor
-## Last Update Wed Jul 29 16:25:19 2015 Aracthor
+## Last Update Wed Jul 29 17:25:41 2015 Aracthor
 ##
 
 CREATE_USAGE="\
@@ -73,12 +73,17 @@ list_getters ()
 	then
 	    name=${MEMBERS_NAMES[$i]}
 	    type=${MEMBERS_TYPES[$i]}
-	    if [ $(type_is_const $type) == $FALSE ] && [ $(array_contains NATIVES $type) == $FALSE ]
+	    pure_type=$(read_type $type)
+	    if [ $(array_contains NATIVES $pure_type) == $FALSE ] && [ "$type" == "$pure_type" ]
+	    then
+		type=$type"&"
+	    fi
+	    if [ $(type_is_const $type) == $FALSE ] && [ $(array_contains NATIVES $pure_type) == $FALSE ]
 	    then
 		type="const "$type
 	    fi
-	    name="get""${name^}"
-	    prototype=$(echo "inline ""$type $name""() const;" | sed "s/ /_/g")
+	    method="get""${name^}"
+	    prototype=$(echo "inline ""$type\t$method""() const;" | sed "s/ /_/g")
 	    GETTERS+=($prototype)
 	fi
     done
@@ -86,7 +91,6 @@ list_getters ()
 
 create_header ()
 {
-
     local data=""
 
     # Double-inclusion protection
@@ -172,37 +176,102 @@ create_header ()
 
     # Closure
     data=$data"};\n\n"
+    if (( ${#GETTERS[@]} > 0 ))
+    then
+	data=$data"# include \"$CLASS_NAME.hpp\"\n\n"
+    fi
     data=$data"#endif // !$MACCRO"
 
     echo -e "$data" > $1
 }
 
+create_inline ()
+{
+    local data=""
+
+    for (( i=0; i < ${#MEMBERS_TYPES[@]}; ++i ))
+    do
+	getter=${MEMBERS_GETTERS[$i]}
+	if [ $getter == $TRUE ]
+	then
+	    name=${MEMBERS_NAMES[$i]}
+	    type=${MEMBERS_TYPES[$i]}
+	    pure_type=$(read_type $type)
+	    if [ $(array_contains NATIVES $pure_type) == $FALSE ] && [ "$type" == "$pure_type" ]
+	    then
+		type=$type"&"
+	    fi
+	    if [ $(type_is_const $type) == $FALSE ] && [ $(array_contains NATIVES $pure_type) == $FALSE ]
+	    then
+		type="const "$type
+	    fi
+
+	    method="get""${name^}"
+	    data=$data"\n$type\n"
+	    data=$data"$CLASS_NAME::$method() const\n"
+	    data=$data"{\n"
+	    data=$data"    return (m_$name)\n"
+	    data=$data"}\n"
+	fi
+    done
+
+    echo -e "$data" > $1
+}
+
+create_source ()
+{
+    local data=""
+
+    data=$data"\n#include \"$CLASS_NAME.hh\"\n"
+
+    if [ $DEFAULT_CONSTRUCTOR == $TRUE ]
+    then
+	    data=$data"\n$CLASS_NAME::$CLASS_NAME()\n"
+	    data=$data"{\n"
+	    data=$data"}\n"
+    fi
+
+    if [ $COPY_CONSTRUCTOR == $TRUE ]
+    then
+	    data=$data"\n$CLASS_NAME::$CLASS_NAME(const $CLASS_NAME& ref)\n"
+	    data=$data"{\n"
+	    # TODO copy
+	    data=$data"}\n"
+    fi
+
+    data=$data"\n$CLASS_NAME::~$CLASS_NAME()\n"
+    data=$data"{\n"
+    data=$data"}\n"
+
+    echo -e -n "$data" > $1
+}
+
 create ()
 {
-    if [ $# -lt 2 ] || [ $# -gt 4 ]
+    if [ $# -lt 1 ] || [ $# -gt 3 ]
     then
 	echo -e $CREATE_USAGE >&2
 	return 2
     else
 
 	# Arguments gathering
-	CLASS_NAME=$2
-	if [ $# -eq 2 ]
+	CLASS_NAME=$1
+	if [ $# -eq 1 ]
 	then
 	    include_dir="./"
 	    source_dir="./"
-	elif [ $# -eq 3 ]
+	elif [ $# -eq 2 ]
 	then
-	    include_dir="$3/"
-	    source_dir="$3/"
+	    include_dir="$2/"
+	    source_dir="$2/"
 	else
-	    include_dir="$3/"
-	    source_dir="$4/"
+	    include_dir="$2/"
+	    source_dir="$3/"
 	fi
 
 	source_file="$source_dir$CLASS_NAME.cpp"
 	header_file="$include_dir$CLASS_NAME.hh"
-	template_file="$include_dir$CLASS_NAME.hpp"
+	inline_file="$include_dir$CLASS_NAME.hpp"
 	MACCRO=$(get_maccro_name $CLASS_NAME)
 
 	CLASS=$(read_boolean "Class or Interface ?" 'c' 'i')
@@ -227,8 +296,8 @@ create ()
 		    break
 		fi
 		name=$(read_string "Name: ")
-		getter=$(read_boolean "Getter ?", 'y', 'n')
-
+		getter=$(read_boolean "Getter ?" 'y' 'n')
+		
 		MEMBERS_TYPES+=("$type")
 		MEMBERS_NAMES+=("$name")
 		MEMBERS_GETTERS+=("$getter")
@@ -237,6 +306,14 @@ create ()
 	fi
 
 	create_header $header_file
+	if (( ${#GETTERS[@]} > 0 ))
+	then
+	    create_inline $inline_file
+	fi
+	if [ $CLASS == $TRUE ]
+	then
+	    create_source $source_file
+	fi
     fi
     return 0
 }

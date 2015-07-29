@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 15:37:35 2015 Aracthor
-## Last Update Tue Jul 28 18:22:45 2015 Aracthor
+## Last Update Wed Jul 29 17:04:32 2015 Aracthor
 ##
 
 set -f
@@ -22,6 +22,7 @@ else
 	    exit $return_value
 	fi
     done
-    echo "$0 $1 is not a cpp-maker command. See $0 help for commands list." 1>&2
-    exit 2
+
+    return_value=$(create $@)
+    exit $return_value
 fi

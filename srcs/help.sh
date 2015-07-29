@@ -4,23 +4,22 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:24:18 2015 Aracthor
-## Last Update Tue Jul 28 14:31:10 2015 Aracthor
+## Last Update Wed Jul 29 17:03:56 2015 Aracthor
 ##
 
 COMMANDS=(
-    "create"
     "help"
 )
 
 DESCRIPTIONS=(
-    "Create new class or interface."
     "Print this help message and exit."
 )
 
 print_usage ()
 {
-    message="USAGE: $0 <command> [<args>]\n"
-    message="$message\nCommands are:"
+    message="USAGE: $0 <command> [<args>] OR:\n"
+    message=$message"USAGE: $0 <classname> [<args>]\n"
+    message=$message"\nCommands are:"
     for (( i = 0; i < ${#COMMANDS[@]}; ++i ))
     do
 	command=${COMMANDS[$i]}

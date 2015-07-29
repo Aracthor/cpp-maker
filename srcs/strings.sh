@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Tue Jul 28 14:44:41 2015 Aracthor
-## Last Update Wed Jul 29 16:13:18 2015 Aracthor
+## Last Update Wed Jul 29 17:27:15 2015 Aracthor
 ##
 
 get_maccro_name ()
@@ -13,7 +13,7 @@ get_maccro_name ()
 
     if [ $(there_is_a_namespace $name) == $TRUE ]
     then
-	namespace=$(get_class $name)
+	namespace=$(get_namespace $name)
 	class=$(get_class $name)
 	name=$namespace"_"$class
     fi
