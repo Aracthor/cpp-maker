@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:31:58 2015 Aracthor
-## Last Update Thu Jul 30 10:58:10 2015 Aracthor
+## Last Update Thu Jul 30 11:33:12 2015 Aracthor
 ##
 
 CREATE_USAGE="\
@@ -22,6 +22,7 @@ METHODS=()
 NATIVES=("char" "short" "int" "long" "float" "double")
 GETTERS=()
 
+PROJECT=""
 NAMESPACE=""
 MACCRO=""
 CLASS_NAME=""
@@ -90,9 +91,25 @@ list_getters ()
     done
 }
 
+file_header ()
+{
+    date=$(date "+%a %b %d %H:%M:%S %Y")
+
+    echo "\
+//\n\
+// $2 for $PROJECT in $1\n\
+// \n\
+// Made by $USER\n\
+// \n\
+// Started on  $date $USER\n\
+// Last Update $date $USER\n\
+//\n\n\
+"
+}
+
 create_header ()
 {
-    local data=""
+    local data=$(file_header $1 $2)
 
     # Double-inclusion protection
     data=$data"#ifndef $MACCRO\n"
@@ -193,12 +210,12 @@ create_header ()
     fi
     data=$data"#endif // !$MACCRO"
 
-    echo -e "$data" > $1
+    echo -e "$data" > $1$2
 }
 
 create_inline ()
 {
-    local data=""
+    local data=$(file_header $1 $2)
 
     for (( i=0; i < ${#MEMBERS_TYPES[@]}; ++i ))
     do
@@ -226,14 +243,14 @@ create_inline ()
 	fi
     done
 
-    echo -e "$data" > $1
+    echo -e "$data" > $1$2
 }
 
 create_source ()
 {
-    local data=""
+    local data=$(file_header $1 $2)
 
-    data=$data"\n#include \"$CLASS_NAME.hh\"\n"
+    data=$data"#include \"$CLASS_NAME.hh\"\n"
 
     # Namespace
     if [ "$NAMESPACE" != "" ]
@@ -269,7 +286,7 @@ create_source ()
 	data=$data"\n}\n"
     fi
 
-    echo -e -n "$data" > $1
+    echo -e -n "$data" > $1$2
 }
 
 create ()
@@ -284,15 +301,15 @@ create ()
 	CLASS_NAME=$1
 	if [ $# -eq 1 ]
 	then
-	    include_dir="./"
-	    source_dir="./"
+	    include_dir="$PWD"
+	    source_dir="$PWD"
 	elif [ $# -eq 2 ]
 	then
-	    include_dir="$2/"
-	    source_dir="$2/"
+	    include_dir="$PWD/$2/"
+	    source_dir="$PWD/$2/"
 	else
-	    include_dir="$2/"
-	    source_dir="$3/"
+	    include_dir="$PWD/$2/"
+	    source_dir="$PWD/$3/"
 	fi
 
 	if [ $(there_is_a_namespace $CLASS_NAME) == $TRUE ]
@@ -306,6 +323,7 @@ create ()
 	inline_file="$include_dir$CLASS_NAME.hpp"
 	MACCRO=$(get_maccro_name $CLASS_NAME)
 
+	PROJECT=$(read_string "Name of the project: ")
 	CLASS=$(read_boolean "Class or Interface ?" 'c' 'i')
 	if [ $CLASS == $TRUE ]
 	then
@@ -337,14 +355,14 @@ create ()
 	    done
 	fi
 
-	create_header $header_file
+	create_header $include_dir "$CLASS_NAME.hh"
 	if (( ${#GETTERS[@]} > 0 ))
 	then
-	    create_inline $inline_file
+	    create_inline $include_dir "$CLASS_NAME.hpp"
 	fi
 	if [ $CLASS == $TRUE ]
 	then
-	    create_source $source_file
+	    create_source $source_dir "$CLASS_NAME.cpp"
 	fi
     fi
     return 0

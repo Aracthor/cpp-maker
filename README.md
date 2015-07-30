@@ -9,7 +9,7 @@ Two runs are possible:
 
 The include folder contains `.hh` and optional `.hpp` files, and the source folder contains the `.cpp` file.
 
-When you run it, you have five boolean questions :
+When you run it, you have to enter the name of the project, then five boolean questions :
 
  - Is it a class or an interface ?
  - Is it a final or an heritable class ?
