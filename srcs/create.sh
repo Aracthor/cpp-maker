@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:31:58 2015 Aracthor
-## Last Update Wed Jul 29 17:25:41 2015 Aracthor
+## Last Update Thu Jul 30 10:58:10 2015 Aracthor
 ##
 
 CREATE_USAGE="\
@@ -22,6 +22,7 @@ METHODS=()
 NATIVES=("char" "short" "int" "long" "float" "double")
 GETTERS=()
 
+NAMESPACE=""
 MACCRO=""
 CLASS_NAME=""
 CLASS=$TRUE
@@ -108,6 +109,12 @@ create_header ()
 	data=$data"# include $include\n"
     done
 
+    # Namespace
+    if [ "$NAMESPACE" != "" ]
+    then
+	data=$data"\nnamespace $NAMESPACE\n{\n"
+    fi
+
     # Class name
     data=$data"\nclass\t$CLASS_NAME"
     if [ "$MOTHER" != "" ]
@@ -180,6 +187,10 @@ create_header ()
     then
 	data=$data"# include \"$CLASS_NAME.hpp\"\n\n"
     fi
+    if [ "$NAMESPACE" != "" ]
+    then
+	data=$data"}\n\n"
+    fi
     data=$data"#endif // !$MACCRO"
 
     echo -e "$data" > $1
@@ -224,6 +235,13 @@ create_source ()
 
     data=$data"\n#include \"$CLASS_NAME.hh\"\n"
 
+    # Namespace
+    if [ "$NAMESPACE" != "" ]
+    then
+	data=$data"\nnamespace $NAMESPACE\n{\n"
+    fi
+
+    # Default constructor
     if [ $DEFAULT_CONSTRUCTOR == $TRUE ]
     then
 	    data=$data"\n$CLASS_NAME::$CLASS_NAME()\n"
@@ -231,6 +249,7 @@ create_source ()
 	    data=$data"}\n"
     fi
 
+    # Copy constructor
     if [ $COPY_CONSTRUCTOR == $TRUE ]
     then
 	    data=$data"\n$CLASS_NAME::$CLASS_NAME(const $CLASS_NAME& ref)\n"
@@ -239,9 +258,16 @@ create_source ()
 	    data=$data"}\n"
     fi
 
+    # Destructor
     data=$data"\n$CLASS_NAME::~$CLASS_NAME()\n"
     data=$data"{\n"
     data=$data"}\n"
+
+    # Namespace closure
+    if [ "$NAMESPACE" != "" ]
+    then
+	data=$data"\n}\n"
+    fi
 
     echo -e -n "$data" > $1
 }
@@ -267,6 +293,12 @@ create ()
 	else
 	    include_dir="$2/"
 	    source_dir="$3/"
+	fi
+
+	if [ $(there_is_a_namespace $CLASS_NAME) == $TRUE ]
+	then
+	    NAMESPACE=$(get_namespace $CLASS_NAME)
+	    CLASS_NAME=$(get_class $CLASS_NAME)
 	fi
 
 	source_file="$source_dir$CLASS_NAME.cpp"
