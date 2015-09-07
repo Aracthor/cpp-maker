@@ -4,13 +4,14 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 10:02:55 2015 Aracthor
-## Last Update Mon Sep  7 12:23:39 2015 Aracthor
+## Last Update Mon Sep  7 14:23:45 2015 Aracthor
 ##
 
 class   File:
     def __init__(self, path):
         self.file = open(path, "w")
         self.data = ""
+        self.indentation = "    "
 
     def write(self, configs, definition):
         self.generateData(configs, definition)
@@ -18,15 +19,22 @@ class   File:
 
     def writeNamespacesEntry(self, namespaces):
         if len(namespaces) > 0:
-            self.data += "\n"
             for namespace in namespaces:
-                self.data += "namespace "+namespace+"\n{\n"
+                self.writeLine("namespace "+namespace)
+                self.writeLine("{")
+            self.writeEmptyLine()
 
-    def writenamespacesExit(self, namespaces):
+    def writeNamespacesExit(self, namespaces):
+        self.writeEmptyLine()
         if len(namespaces) > 0:
-            self.data += "\n"
             for namespace in namespaces:
-                self.data += "}\n"
+                self.writeLine("}")
+
+    def writeLine(self, string):
+        self.data += string+"\n"
+
+    def writeEmptyLine(self):
+        self.data += "\n"
 
     def close(self):
         self.file.close()
@@ -44,7 +52,7 @@ class   FileManager:
         self.include_file = IncludeFile(configs.include_file)
         if not definition.interface:
             self.source_file = SourceFile(configs.source_file)
-            self.template_file = TemplateFile(configs.source_file)
+            self.template_file = TemplateFile(configs.template_file)
 
     def writeFiles(self):
         self.include_file.write(self.configs, self.definition)
