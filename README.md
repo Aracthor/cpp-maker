@@ -1,12 +1,20 @@
 # cpp-maker
 C++ class generator.
 
+## Installation
+
+Type the following command line:
+
+    sudo ./setup.py install
+
+To install cpp-maker on your system. You can then call the program with command `cpp-maker` or the complete file name `cpp-maker.py`.
+
 ## Usage
 Three runs are possible:
 
-    ./cpp-maker <classname>
-    ./cpp-maker <classname> <folder>
-    ./cpp-maker <classname> <include folder> <source folder>
+    cpp-maker <classname>
+    cpp-maker <classname> <folder>
+    cpp-maker <classname> <include folder> <source folder>
 
 On the first option, include and source folders shall be `./`.  
 On the seconde one, both shall be the `<folder>` argument.  
