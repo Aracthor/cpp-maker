@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Jul 27 16:33:13 2015 Aracthor
-## Last Update Tue Jul 28 14:51:34 2015 Aracthor
+## Last Update Mon Sep  7 09:08:48 2015 Aracthor
 ##
 
 CC=		cat
@@ -16,7 +16,7 @@ INSTALL=	install
 
 
 PREFIX=		/usr/local
-BIN_DIR=	$(PREFIX)/bin
+INSTALL_DIR=	$(PREFIX)/bin
 
 
 BIN_DIR=	bin/
@@ -51,4 +51,4 @@ clean:
 re:		clean all
 
 install:	$(CPP_MAKER)
-		$(INSTALL) -m 0755 $(NAME) $(BIN_DIR)
+		$(INSTALL) -m 0755 $(NAME) $(INSTALL_DIR)
