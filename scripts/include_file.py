@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 12:03:26 2015 Aracthor
-## Last Update Mon Sep  7 20:16:05 2015 Aracthor
+## Last Update Mon Sep  7 21:22:06 2015 Aracthor
 ##
 
 from files import File
@@ -56,7 +56,7 @@ class   IncludeFile(File):
             self.writeEmptyLine()
             self.writeLine("public:")
             for member in definition.getters:
-                self.writeLine(self.indentation + member.return_type + "\tget" + member.name.title() + "() const;")
+                self.writeLine(self.indentation + "inline " + member.return_type + "\tget" + member.name.title() + "() const;")
 
         # Members
         if len(definition.members) > 0:
