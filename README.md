@@ -40,4 +40,4 @@ Shall generate a class `Bar` inside the namespace `foo`.
 ## Todo
 Complete remake in another language, **shell** was a terrible idea.
 
-**Python** should be considered.
+A new version is currently in development on branch `python`, and it is, as its names implies, in **Python 3**.
