@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 10:02:55 2015 Aracthor
-## Last Update Wed Sep  9 01:30:49 2015 Aracthor
+## Last Update Wed Sep  9 01:37:11 2015 Aracthor
 ##
 
 class   File:
@@ -15,7 +15,12 @@ class   File:
 
     def write(self, configs, definition):
         self.generateData(configs, definition)
+        self.clearUselessNamespaces(configs.namespaces)
         self.file.write(self.data)
+
+    def clearUselessNamespaces(self, namespaces):
+        for namespace in namespaces:
+            self.data = self.data.replace(namespace + "::", "")
 
     def writeNamespacesEntry(self, namespaces):
         if len(namespaces) > 0:

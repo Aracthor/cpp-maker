@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 12:03:26 2015 Aracthor
-## Last Update Wed Sep  9 01:31:03 2015 Aracthor
+## Last Update Wed Sep  9 01:37:52 2015 Aracthor
 ##
 
 from files import File
@@ -24,7 +24,7 @@ class   IncludeFile(File):
 
         if len(includes) > 0:
             for include in includes:
-                self.writeLine("# include \""+include+"\"")
+                self.writeLine("# include \""+include+".hh\"")
             self.writeEmptyLine()
 
     def getMaccroName(self, configs):
