@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 10:09:33 2015 Aracthor
-## Last Update Mon Sep  7 20:16:20 2015 Aracthor
+## Last Update Wed Sep  9 01:23:42 2015 Aracthor
 ##
 
 def     boolean_input(name, default):
@@ -39,6 +39,7 @@ class   Member:
         self.return_type = ""
         self.name = ""
         self.getter = True
+        self.include = None
 
     def askUserForDefinition(self):
         self.pure_type = string_input("Type: ")
@@ -49,8 +50,25 @@ class   Member:
             self.calcReturnType()
 
     def calcReturnType(self):
-        # TODO
         self.return_type = self.pure_type
+        object_type = self.pure_type
+        const = (object_type[:5] == "const")
+        if const:
+            object_type = object_type[6:]
+
+        object_pure_type = object_type.replace("&", "").replace("*", "")
+        pointer_or_ref = object_type != object_pure_type
+        if object_pure_type not in NATIVE_TYPES:
+            self.include = object_pure_type.replace("::", "/")
+            if not const:
+                self.return_type = "const " + self.return_type
+            if object_pure_type == object_type:
+                self.return_type += "&"
+        else:
+            if pointer_or_ref and not const:
+                self.return_type = "const " + self.return_type
+            elif const:
+                self.return_type = self.return_type[6:]
 
     def isValid(self):
         return self.valid
@@ -61,12 +79,14 @@ class   Definition:
         self.interface = False
         self.default_constructor = False
         self.copy_constructor = False
+        self.mother_class = None
         self.final = False
         self.members = []
         self.getters = []
 
     def askUserForDefinition(self):
         self.interface = boolean_input("Interface", False)
+        self.mother_class = string_input("Mother class: ")
         if not self.interface:
             self.default_constructor = boolean_input("Default constructor", True)
             self.copy_constructor = boolean_input("Copy constructor", False)

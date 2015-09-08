@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 12:03:26 2015 Aracthor
-## Last Update Mon Sep  7 21:22:06 2015 Aracthor
+## Last Update Wed Sep  9 01:31:03 2015 Aracthor
 ##
 
 from files import File
@@ -12,6 +12,20 @@ from files import File
 class   IncludeFile(File):
     def __init__(self, path):
         File.__init__(self, path)
+
+    def writeIncludes(self, mother, members):
+        includes=[]
+        if mother:
+            includes.append(mother.replace("::", "/"))
+
+        for member in members:
+            if member.include and member.include not in includes:
+                includes.append(member.include)
+
+        if len(includes) > 0:
+            for include in includes:
+                self.writeLine("# include \""+include+"\"")
+            self.writeEmptyLine()
 
     def getMaccroName(self, configs):
         maccro = ""
@@ -33,7 +47,10 @@ class   IncludeFile(File):
         return maccro
 
     def writeClassPrototype(self, name, definition):
-        self.writeLine("class " + name)
+        if definition.mother_class:
+            self.writeLine("class\t" + name + " : public " + definition.mother_class)
+        else:
+            self.writeLine("class\t" + name)
         self.writeLine("{")
 
         # Constructors
@@ -76,6 +93,8 @@ class   IncludeFile(File):
         self.writeLine("#ifndef " + maccro)
         self.writeLine("# define " + maccro)
         self.writeEmptyLine()
+
+        self.writeIncludes(definition.mother_class, definition.members)
 
         self.writeNamespacesEntry(configs.namespaces)
 

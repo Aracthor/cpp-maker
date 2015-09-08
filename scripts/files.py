@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 10:02:55 2015 Aracthor
-## Last Update Mon Sep  7 14:23:45 2015 Aracthor
+## Last Update Wed Sep  9 01:30:49 2015 Aracthor
 ##
 
 class   File:
@@ -25,8 +25,8 @@ class   File:
             self.writeEmptyLine()
 
     def writeNamespacesExit(self, namespaces):
-        self.writeEmptyLine()
         if len(namespaces) > 0:
+            self.writeEmptyLine()
             for namespace in namespaces:
                 self.writeLine("}")
 
