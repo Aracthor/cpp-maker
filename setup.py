@@ -1,13 +1,13 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 ## setup.py for cpp-maker in /home/aracthor/programs/projects/cpp-maker
 ## 
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 22:38:30 2015 Aracthor
-## Last Update Wed Sep  9 10:07:12 2015 Aracthor
+## Last Update Wed Sep  9 16:17:13 2015 Aracthor
 ##
 
-from setuptools import setup
+from distutils.core import setup
 # you may need setuptools instead of distutils
 
 setup(
