@@ -4,14 +4,14 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 12:03:26 2015 Aracthor
-## Last Update Wed Sep  9 01:37:52 2015 Aracthor
+## Last Update Wed Sep  9 09:57:50 2015 Aracthor
 ##
 
 from files import File
 
 class   IncludeFile(File):
-    def __init__(self, path):
-        File.__init__(self, path)
+    def __init__(self, path, project):
+        File.__init__(self, path, project)
 
     def writeIncludes(self, mother, members):
         includes=[]

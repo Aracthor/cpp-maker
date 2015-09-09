@@ -4,16 +4,24 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 10:02:55 2015 Aracthor
-## Last Update Wed Sep  9 01:37:11 2015 Aracthor
+## Last Update Wed Sep  9 10:04:33 2015 Aracthor
 ##
 
+from headers import HeaderWriter
+
 class   File:
-    def __init__(self, path):
+    def __init__(self, path, project):
         self.file = open(path, "w")
         self.data = ""
         self.indentation = "    "
+        self.headerWriter = HeaderWriter(path, project)
+
+    def writeHeader(self, configs):
+        if "emacs" in configs.options:
+            self.data = self.headerWriter.emacsWrite()
 
     def write(self, configs, definition):
+        self.writeHeader(configs)
         self.generateData(configs, definition)
         self.clearUselessNamespaces(configs.namespaces)
         self.file.write(self.data)
@@ -54,10 +62,10 @@ class   FileManager:
     def __init__(self, configs, definition):
         self.configs = configs
         self.definition = definition
-        self.include_file = IncludeFile(configs.include_file)
+        self.include_file = IncludeFile(configs.include_file, definition.project)
         if not definition.interface:
-            self.source_file = SourceFile(configs.source_file)
-            self.template_file = TemplateFile(configs.template_file)
+            self.source_file = SourceFile(configs.source_file, definition.project)
+            self.template_file = TemplateFile(configs.template_file, definition.project)
 
     def writeFiles(self):
         self.include_file.write(self.configs, self.definition)

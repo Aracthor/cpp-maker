@@ -4,14 +4,14 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 12:03:26 2015 Aracthor
-## Last Update Mon Sep  7 21:21:02 2015 Aracthor
+## Last Update Wed Sep  9 09:57:55 2015 Aracthor
 ##
 
 from files import File
 
 class   SourceFile(File):
-    def __init__(self, path):
-        File.__init__(self, path)
+    def __init__(self, path, project):
+        File.__init__(self, path, project)
 
     def writeIncludeLine(self, configs):
         path = ""

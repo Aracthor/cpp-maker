@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 10:09:33 2015 Aracthor
-## Last Update Wed Sep  9 01:23:42 2015 Aracthor
+## Last Update Wed Sep  9 09:57:32 2015 Aracthor
 ##
 
 def     boolean_input(name, default):
@@ -76,6 +76,7 @@ class   Member:
 
 class   Definition:
     def __init__(self):
+        self.project = None
         self.interface = False
         self.default_constructor = False
         self.copy_constructor = False
@@ -84,7 +85,9 @@ class   Definition:
         self.members = []
         self.getters = []
 
-    def askUserForDefinition(self):
+    def askUserForDefinition(self, options):
+        if "emacs" in options:
+            self.project = string_input("Project: ")
         self.interface = boolean_input("Interface", False)
         self.mother_class = string_input("Mother class: ")
         if not self.interface:
