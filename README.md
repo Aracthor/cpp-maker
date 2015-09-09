@@ -1,5 +1,5 @@
 # cpp-maker
-C++ class generator.
+C++ class files generator.
 
 ## Installation
 
@@ -18,7 +18,7 @@ Three runs are possible:
 
 On the first option, include and source folders shall be `./`.  
 On the seconde one, both shall be the `<folder>` argument.  
-The include folder contains `.hh` and optional `.hpp` files, and the source folder contains the `.cpp` file.
+The include folder contains `.hh` and `.hpp` files, and the source folder contains the `.cpp` file.
 
 When you run it, you have to enter the name of the project, then five boolean questions :
 
@@ -50,3 +50,20 @@ It works with more than one namespace. Just enter the complete path to your clas
     cpp-maker foo::bar::Toto
 
 Shall generate a class `Toto` inside the namespace `bar` inside the namespace `foo`.
+
+## Options
+You can add options with arguments starting with `--` or their equivalent flag with `-`.  
+For now, there is one option: to add an emacs-style header with option `--emacs` or its equivalent `-e`. For instance:
+
+    cpp-maker Toto --emacs
+
+Files Toto.hh, Toto.hpp and Toto.cpp shall start by a header emacs like this:
+
+> //  
+> // Toto.{extention} for {project} in {complete creation location path}  
+> //  
+> // Made by {user}  
+> //  
+> // Started on  {current date and time} {user}  
+> // Last Update {current date and time} {user}  
+> //  
