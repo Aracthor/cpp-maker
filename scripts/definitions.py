@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 10:09:33 2015 Aracthor
-## Last Update Wed Sep  9 09:57:32 2015 Aracthor
+## Last Update Wed Sep  9 10:33:00 2015 Aracthor
 ##
 
 def     boolean_input(name, default):
@@ -30,7 +30,7 @@ def     string_input(name):
 
 
 # Unexhaustive, of course
-NATIVE_TYPES=["char", "short", "int", "long", "float", "double"]
+NATIVE_TYPES=["bool", "char", "short", "int", "long", "float", "double"]
 
 class   Member:
     def __init__(self):
