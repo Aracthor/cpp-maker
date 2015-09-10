@@ -1,13 +1,24 @@
 # cpp-maker
-C++ class generator.
+C++ class files generator.
+
+## Installation
+
+Type the following command line:
+
+    sudo ./setup.py install
+
+To install cpp-maker on your system. You can then call the program with command `cpp-maker` or the complete file name `cpp-maker.py`.
 
 ## Usage
-Two runs are possible:
+Three runs are possible:
 
-    cpp-maker <classname> [<folder>]
-    cpp-maker <classname> [<include folder>] [<source folder>]
+    cpp-maker <classname>
+    cpp-maker <classname> <folder>
+    cpp-maker <classname> <include folder> <source folder>
 
-The include folder contains `.hh` and optional `.hpp` files, and the source folder contains the `.cpp` file.
+On the first option, include and source folders shall be `./`.  
+On the seconde one, both shall be the `<folder>` argument.  
+The include folder contains `.hh` and `.hpp` files, and the source folder contains the `.cpp` file.
 
 When you run it, you have to enter the name of the project, then five boolean questions :
 
@@ -28,16 +39,31 @@ Then, if you didn't choose to create an interface, you can then define as many m
 When you are over, just enter a blank on the type question to generate your files.
 
 ## Namespace
-
 You can generate a class with a specific namespace. Just enter it with the namespace path in arguments :
 
-    cpp-maker foo::Bar
+    cpp-maker foo::Toto
 
-Shall generate a class `Bar` inside the namespace `foo`.
+Shall generate a class `Toto` inside the namespace `foo`.
 
-**WARNING** : nothing works for now with more than one namespace on the same name. So don't try to create something like `foo::bar::Toto`.
+It works with more than one namespace. Just enter the complete path to your class :
 
-## Todo
-Complete remake in another language, **shell** was a terrible idea.
+    cpp-maker foo::bar::Toto
 
-A new version is currently in development on branch `python`, and it is, as its names implies, in **Python 3**.
+Shall generate a class `Toto` inside the namespace `bar` inside the namespace `foo`.
+
+## Options
+You can add options with arguments starting with `--` or their equivalent flag with `-`.  
+For now, there is one option: to add an emacs-style header with option `--emacs` or its equivalent `-e`. For instance:
+
+    cpp-maker Toto --emacs
+
+Files Toto.hh, Toto.hpp and Toto.cpp shall start by a header emacs like this:
+
+> //  
+> // Toto.{extention} for {project} in {complete creation location path}  
+> //  
+> // Made by {user}  
+> //  
+> // Started on  {current date and time} {user}  
+> // Last Update {current date and time} {user}
+> //  
