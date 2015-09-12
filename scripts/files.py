@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 10:02:55 2015 Aracthor
-## Last Update Wed Sep  9 10:04:33 2015 Aracthor
+## Last Update Sat Sep 12 19:55:07 2015 Aracthor
 ##
 
 from headers import HeaderWriter
@@ -66,6 +66,9 @@ class   FileManager:
         if not definition.interface:
             self.source_file = SourceFile(configs.source_file, definition.project)
             self.template_file = TemplateFile(configs.template_file, definition.project)
+        else:
+            self.source_file = None
+            self.template_file = None
 
     def writeFiles(self):
         self.include_file.write(self.configs, self.definition)
@@ -75,5 +78,7 @@ class   FileManager:
 
     def close(self):
         self.include_file.close()
-        self.template_file.close()
-        self.source_file.close()
+        if self.source_file:
+            self.source_file.close()
+        if self.template_file:
+            self.template_file.close()
