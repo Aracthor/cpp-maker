@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 12:03:26 2015 Aracthor
-## Last Update Wed Sep  9 09:57:55 2015 Aracthor
+## Last Update Mon Oct 19 12:11:01 2015 Vivien Bonnet
 ##
 
 from files import File
@@ -17,7 +17,7 @@ class   SourceFile(File):
         path = ""
         for namespace in configs.namespaces:
             path += namespace + "/"
-        path += configs.class_name + ".hh"
+        path += configs.class_name + ".hpp"
         self.writeLine("#include \""+path+"\"")
         self.writeEmptyLine()
 
