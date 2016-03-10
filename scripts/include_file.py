@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 12:03:26 2015 Aracthor
-## Last Update Wed Sep  9 10:35:05 2015 Aracthor
+## Last Update Mon Oct 19 12:11:25 2015 Vivien Bonnet
 ##
 
 from files import File
@@ -24,7 +24,7 @@ class   IncludeFile(File):
 
         if len(includes) > 0:
             for include in includes:
-                self.writeLine("# include \""+include+".hh\"")
+                self.writeLine("# include \""+include+".hpp\"")
             self.writeEmptyLine()
 
     def getMaccroName(self, configs):
@@ -42,7 +42,7 @@ class   IncludeFile(File):
             elif c >= 'a' and c <= 'z':
                 class_name_maccro = class_name_maccro[:i] + class_name_maccro[i].upper() + class_name_maccro[i + 1:]
             i += 1
-        maccro += class_name_maccro + "_HH_"
+        maccro += class_name_maccro + "_HPP_"
 
         return maccro
 
@@ -106,8 +106,9 @@ class   IncludeFile(File):
 
         self.writeNamespacesExit(configs.namespaces)
 
-        self.writeEmptyLine()
-        self.writeLine("# include \"" + configs.class_name + ".hpp\"")
+        if not definition.interface:
+            self.writeEmptyLine()
+            self.writeLine("# include \"" + configs.class_name + ".ipp\"")
 
         self.writeEmptyLine()
         self.writeLine("#endif // !" + maccro)

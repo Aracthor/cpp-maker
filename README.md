@@ -18,7 +18,7 @@ Three runs are possible:
 
 On the first option, include and source folders shall be `./`.  
 On the seconde one, both shall be the `<folder>` argument.  
-The include folder contains `.hh` and `.hpp` files, and the source folder contains the `.cpp` file.
+The include folder contains `.hpp` and `.ipp` files, and the source folder contains the `.cpp` file.
 
 When you run it, you have to enter the name of the project, then five boolean questions :
 
@@ -57,7 +57,7 @@ For now, there is one option: to add an emacs-style header with option `--emacs`
 
     cpp-maker Toto --emacs
 
-Files Toto.hh, Toto.hpp and Toto.cpp shall start by a header emacs like this:
+Files Toto.hpp, Toto.ipp and Toto.cpp shall start by a header emacs like this:
 
 > //  
 > // Toto.{extention} for {project} in {complete creation location path}  
@@ -65,5 +65,5 @@ Files Toto.hh, Toto.hpp and Toto.cpp shall start by a header emacs like this:
 > // Made by {user}  
 > //  
 > // Started on  {current date and time} {user}  
-> // Last Update {current date and time} {user}
+> // Last Update Thu Mar 10 16:09:02 2016 Vivien Bonnet  
 > //  

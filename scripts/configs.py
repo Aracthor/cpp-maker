@@ -4,7 +4,7 @@
 ## Made by Aracthor
 ## 
 ## Started on  Mon Sep  7 09:26:11 2015 Aracthor
-## Last Update Wed Sep  9 10:05:00 2015 Aracthor
+## Last Update Mon Oct 19 12:11:43 2015 Vivien Bonnet
 ##
 
 AVAILLABLE_FLAGS = ["e"]
@@ -65,6 +65,6 @@ class   Configs:
             self.source_folder = args[2]
 
     def calc_files_paths(self):
-        self.include_file = self.include_folder + "/" + self.class_name + ".hh"
-        self.template_file = self.include_folder + "/" + self.class_name + ".hpp"
+        self.include_file = self.include_folder + "/" + self.class_name + ".hpp"
+        self.template_file = self.include_folder + "/" + self.class_name + ".ipp"
         self.source_file = self.source_folder + "/" + self.class_name + ".cpp"
